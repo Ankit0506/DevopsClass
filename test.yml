@@ -1,12 +1,25 @@
 ---
-- hosts: web #group name from the inventry
-  vars:
+- hosts: web
+  var: 
    pack_name: httpd
    serv_name: httpd
 
   tasks:
-    - name: Install {{ pack_name }}
-      yum: pkg={{ pack_name }} state=installed
-    - name: Start {{ serv_name }}
-      service: name={{ serv_name }} state=started
-...
+  - name: Install {{ pack_name }}
+    yum: pkg={{ pack_name }} state=installed
+    become: yes
+    register: output
+
+- debug debug: var=output
+
+- name: Print Successfull manage
+  debug: msg " Installation is sucessfull"
+  when: output is succeded
+
+- name: Print Failure message
+  debug: msg="Installation is failed"
+  when: output is failed"
+
+
+
+
