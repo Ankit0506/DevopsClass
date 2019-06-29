@@ -1,0 +1,48 @@
+---
+ - name: Check command
+   hosts: web
+   sudo: true
+
+   tasks:
+     - name: date command
+       shell: date
+       register: myoutput
+     - debug: var=myoutput
+
+     - name: uptime command
+       shell: uptime
+       register: myoutput1
+     - debug: var=myoutput1
+
+     - name: cat command
+       shell: cat /etc/hosts
+       register: myoutput2
+     - debug: var=myoutput2
+ 
+     - name: FIle save
+       lineinfile:
+          path: /opt/ank.txt
+          state: present
+          create: yes
+          line: "{{ myoutput.stdout }}"
+          insertafter: EOF
+
+     - name: FIle save
+       lineinfile:
+          path: /opt/ank.txt
+          state: present
+          create: yes
+          line: "{{ myoutput1.stdout }}"
+          insertafter: EOF
+          
+     - name: FIle save
+       lineinfile:
+          path: /opt/ank.txt
+          state: present
+          create: yes
+          mode: '0755'
+          owner: root
+          group: root
+          line: "{{ myoutput2.stdout }}"
+          insertafter: EOF
+...
